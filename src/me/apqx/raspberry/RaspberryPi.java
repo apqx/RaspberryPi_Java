@@ -24,7 +24,7 @@ public class RaspberryPi {
     }
     private static void start(){
         try {
-            ServerSocket serverSocket=new ServerSocket(8080);
+            ServerSocket serverSocket=new ServerSocket(1335);
             System.out.println("Waiting for connection...");
             Socket socket=serverSocket.accept();
             System.out.println("Connected Successfull!");

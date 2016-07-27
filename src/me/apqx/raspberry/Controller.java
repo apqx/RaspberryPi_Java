@@ -24,7 +24,7 @@ public class Controller {
     public static void main(String[] args){
         new Controller();
     }
-    Controller(){
+    private Controller(){
         init();
     }
     private void init(){
@@ -32,7 +32,7 @@ public class Controller {
         frame.setBounds(1366/4,768/4,800,400);
         frame.setLayout(new FlowLayout());
         textIp=new TextField(10);
-        textIp.setText("192.168.1.240");
+        textIp.setText("192.168.3.6");
         frame.add(textIp);
         button=new Button("Connect");
         frame.add(button);
@@ -123,7 +123,7 @@ public class Controller {
     private void startCommunicate(){
         try {
             if (socket==null){
-                socket=new Socket(InetAddress.getByName(textIp.getText()),8080);
+                socket=new Socket(InetAddress.getByName(textIp.getText()),1335);
                 textState.setText("Connected Successfull");
                 printStream=new PrintStream(socket.getOutputStream());
             }
