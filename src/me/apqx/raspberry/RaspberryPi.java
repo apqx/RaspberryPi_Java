@@ -11,7 +11,10 @@ import java.util.Scanner;
  * Created by chang on 2016/6/30.
  */
 public class RaspberryPi {
-    private static final GpioController GPIO= GpioFactory.getInstance();
+    //多设备连接的客户端数
+    private static int devices;
+    private static boolean isFirstDevice=true;
+    private static final GpioController GPIO=GpioFactory.getInstance();
     private static RaspberryPi raspberryPi;
     private static final GpioPinDigitalOutput RIGHT_1=GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_00,"right_1", PinState.LOW);
     private static final GpioPinDigitalOutput RIGHT_2=GPIO.provisionDigitalOutputPin(RaspiPin.GPIO_01,"right_2",PinState.LOW);
@@ -23,13 +26,16 @@ public class RaspberryPi {
         start();
     }
     private static void start(){
+        devices++;
         try {
             ServerSocket serverSocket=new ServerSocket(1335);
-            System.out.println("Waiting for connection...");
+            if (isFirstDevice){
+                System.out.println("Waiting for connection...");
+                isFirstDevice=false;
+            }
             Socket socket=serverSocket.accept();
-            System.out.println("Connected Successfull!");
-//            new Communicate(socket,raspberryPi);
-            multiDevices(socket,raspberryPi);
+            System.out.println("Device "+devices+" connected successfull!");
+            multiDevices(socket,raspberryPi,devices);
             serverSocket.close();
             start();
         } catch (IOException e) {
@@ -39,11 +45,11 @@ public class RaspberryPi {
 
     }
     //多客户端同时连接支持
-    private static void multiDevices(Socket socket,RaspberryPi raspberryPi){
+    private static void multiDevices(Socket socket,RaspberryPi raspberryPi,int devices){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new Communicate(socket,raspberryPi);
+                new Communicate(socket,raspberryPi,devices);
             }
         }).start();
     }

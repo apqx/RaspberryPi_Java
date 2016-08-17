@@ -11,19 +11,21 @@ import java.net.Socket;
  */
 public class Communicate {
     private Socket socket;
+    private int devices;
     private RaspberryPi raspberryPi;
     private PrintStream printStream;
     private BufferedReader bufferedReader;
-    Communicate(Socket socket,RaspberryPi raspberryPi){
+    Communicate(Socket socket,RaspberryPi raspberryPi,int devices){
         this.socket=socket;
         this.raspberryPi=raspberryPi;
+        this.devices=devices;
         startCommunicate();
     }
     private void startCommunicate(){
         try {
             printStream=new PrintStream(socket.getOutputStream());
             bufferedReader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            printStream.println("Connected Successfull!");
+//            printStream.println("Connected Successfull!");
             String string;
             while ((string=bufferedReader.readLine())!=null){
                 switch (string){
@@ -53,12 +55,12 @@ public class Communicate {
                 }
             }
         }catch (IOException e){
-            System.out.println("Socket reset!");
             raspberryPi.stop();
             stopCommunicate();
         }
     }
     private void stopCommunicate(){
+        System.out.println("Device "+devices+" offline!");
         try {
             printStream.close();
             bufferedReader.close();
