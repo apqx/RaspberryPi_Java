@@ -32,7 +32,7 @@ public class Controller {
         frame.setBounds(1366/4,768/4,800,400);
         frame.setLayout(new FlowLayout());
         textIp=new TextField(10);
-        textIp.setText("192.168.3.6");
+        textIp.setText("192.168.0.1");
         frame.add(textIp);
         button=new Button("Connect");
         frame.add(button);

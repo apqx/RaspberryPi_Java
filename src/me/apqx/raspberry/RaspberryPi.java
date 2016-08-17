@@ -28,7 +28,8 @@ public class RaspberryPi {
             System.out.println("Waiting for connection...");
             Socket socket=serverSocket.accept();
             System.out.println("Connected Successfull!");
-            new Communicate(socket,raspberryPi);
+//            new Communicate(socket,raspberryPi);
+            multiDevices(socket,raspberryPi);
             serverSocket.close();
             start();
         } catch (IOException e) {
@@ -36,6 +37,15 @@ public class RaspberryPi {
             System.out.println("Build Server Failed!");
         }
 
+    }
+    //多客户端同时连接支持
+    private static void multiDevices(Socket socket,RaspberryPi raspberryPi){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new Communicate(socket,raspberryPi);
+            }
+        }).start();
     }
     private static void CheckInput(){
         new Thread(new Runnable() {
