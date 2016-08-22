@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 
-/**
+/**用于建立网络连接的类
  * Created by chang on 2016/6/30.
  */
 public class Communicate {
@@ -15,10 +15,14 @@ public class Communicate {
     private RaspberryPi raspberryPi;
     private PrintStream printStream;
     private BufferedReader bufferedReader;
+    private Thread currentThread;
+    private Thread checkThread;
     Communicate(Socket socket,RaspberryPi raspberryPi,int devices){
         this.socket=socket;
         this.raspberryPi=raspberryPi;
         this.devices=devices;
+        currentThread=Thread.currentThread();
+        checkConnection();
         startCommunicate();
     }
     private void startCommunicate(){
@@ -70,5 +74,28 @@ public class Communicate {
         }catch (IOException e){
             e.printStackTrace();
         }
+    }
+    //检查连接是否断开，间隔为1秒
+    private void checkConnection(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    checkThread=Thread.currentThread();
+                    while (true){
+                        if (socket.isClosed()){
+                            System.out.println("Device "+devices+" checked");
+                            raspberryPi.stop();
+                            currentThread.interrupt();
+                            break;
+                        }
+                        checkThread.sleep(1000);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
     }
 }
