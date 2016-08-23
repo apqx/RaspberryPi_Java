@@ -26,18 +26,19 @@ public class RaspberryPi {
         start();
     }
     private static void start(){
-        devices++;
         try {
             ServerSocket serverSocket=new ServerSocket(1335);
             if (isFirstDevice){
                 System.out.println("Waiting for connection...");
                 isFirstDevice=false;
             }
-            Socket socket=serverSocket.accept();
-            System.out.println("Device "+devices+" connected successfull!");
-            multiDevices(socket,raspberryPi,devices);
-            serverSocket.close();
-            start();
+            while (true){
+                devices++;
+                Socket socket=serverSocket.accept();
+                System.out.println("Device "+devices+" connected successfull!");
+                multiDevices(socket,raspberryPi,devices);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Build Server Failed!");

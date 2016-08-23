@@ -11,4 +11,8 @@ public class RaspberryAction {
     public static final String STOP="stop";
     public static final String EXIT="exit";
     public static final String SHUTDOWN="shutdown";
+    public static final String CHECK="check";
+    public static final String CHECK_BACK="checkBack";
+    public static final String CAMERA_ON="turnOnCamera";
+    public static final String CAMERA_OFF="turnOffCamera";
 }
