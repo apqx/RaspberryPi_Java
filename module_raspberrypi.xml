@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_raspberrypi" default="compile.module.raspberrypi">
+  <dirname property="module.raspberrypi.basedir" file="${ant.file.module_raspberrypi}"/>
+  
+  <property name="module.jdk.home.raspberrypi" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.raspberrypi" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.raspberrypi" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.raspberrypi" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="raspberrypi.output.dir" value="${module.raspberrypi.basedir}/../out/production/RaspberryPi"/>
+  <property name="raspberrypi.testoutput.dir" value="${module.raspberrypi.basedir}/../out/test/RaspberryPi"/>
+  
+  <path id="raspberrypi.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="raspberrypi.module.production.classpath">
+    <path refid="${module.jdk.classpath.raspberrypi}"/>
+    <fileset dir="${basedir}/../RaspberryPi/pi4j-1.1-SNAPSHOT/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="raspberrypi.runtime.production.module.classpath">
+    <pathelement location="${raspberrypi.output.dir}"/>
+    <fileset dir="${basedir}/../RaspberryPi/pi4j-1.1-SNAPSHOT/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="raspberrypi.module.classpath">
+    <path refid="${module.jdk.classpath.raspberrypi}"/>
+    <pathelement location="${raspberrypi.output.dir}"/>
+    <fileset dir="${basedir}/../RaspberryPi/pi4j-1.1-SNAPSHOT/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <path id="raspberrypi.runtime.module.classpath">
+    <pathelement location="${raspberrypi.testoutput.dir}"/>
+    <pathelement location="${raspberrypi.output.dir}"/>
+    <fileset dir="${basedir}/../RaspberryPi/pi4j-1.1-SNAPSHOT/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.raspberrypi">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.raspberrypi">
+    <patternset refid="excluded.from.module.raspberrypi"/>
+  </patternset>
+  
+  <path id="raspberrypi.module.sourcepath">
+    <dirset dir="${module.raspberrypi.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.raspberrypi" depends="compile.module.raspberrypi.production,compile.module.raspberrypi.tests" description="Compile module RaspberryPi"/>
+  
+  <target name="compile.module.raspberrypi.production" depends="register.custom.compilers" description="Compile module RaspberryPi; production classes">
+    <mkdir dir="${raspberrypi.output.dir}"/>
+    <javac2 destdir="${raspberrypi.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.raspberrypi}/javac">
+      <compilerarg line="${compiler.args.raspberrypi}"/>
+      <bootclasspath refid="raspberrypi.module.bootclasspath"/>
+      <classpath refid="raspberrypi.module.production.classpath"/>
+      <src refid="raspberrypi.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.raspberrypi"/>
+    </javac2>
+    
+    <copy todir="${raspberrypi.output.dir}">
+      <fileset dir="${module.raspberrypi.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.raspberrypi.tests" depends="register.custom.compilers,compile.module.raspberrypi.production" description="compile module RaspberryPi; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.raspberrypi" description="cleanup module">
+    <delete dir="${raspberrypi.output.dir}"/>
+    <delete dir="${raspberrypi.testoutput.dir}"/>
+  </target>
+</project>

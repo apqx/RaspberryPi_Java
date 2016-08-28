@@ -33,4 +33,12 @@ public class RaspberryAction {
     public static final String SERVO_MG995_CAMERA_CCW="mg995CamCCW";
     //SERVO_MG995_CAMERA停止
     public static final String SERVO_MG995_CAMERA_STOP="mg995CamStop";
+    //发送照片之前发送确认指令
+    public static final String SEND_PICTURE="sendPicture";
+    //拍摄照片
+    public static final String TAKE_PICTURE="takePicture";
+    //照片传输结束标志
+    public static final String SEND_PICTURE_OVER="sendPictureOver";
+    //连接Android失败
+    public static final String CONNECT_ANDROID_FAILED="connectAndroidFailed";
 }
