@@ -22,6 +22,9 @@ public class Communicate {
     private boolean isHandMG995Stop;
     //DS3218初始值70，使舵机处于中位
     private int valueOfDS3218=70;
+    //SG90初始值85，使舵机处于中位
+    private int valueOfSG90Horizontal=85;
+    private int valueOfSG90Vertical=85;
     private Socket socket;
     private int devices;
     private RaspberryPi raspberryPi;
@@ -42,10 +45,7 @@ public class Communicate {
     //要发送的文件长度
     private long fileLength;
     Communicate(Socket socket,RaspberryPi raspberryPi,int devices){
-        //设置pwm参数,之所以不再主程序里设置是考虑到此程序启动的过早，参数设置是无效的，故该在客户端连接时设置
-        com.pi4j.wiringpi.Gpio.pwmSetMode(com.pi4j.wiringpi.Gpio.PWM_MODE_MS);
-        com.pi4j.wiringpi.Gpio.pwmSetRange(1000);
-        com.pi4j.wiringpi.Gpio.pwmSetClock(400);
+        raspberryPi.initServo();
         this.socket=socket;
         this.raspberryPi=raspberryPi;
         this.devices=devices;
@@ -60,7 +60,22 @@ public class Communicate {
             arrayList=new ArrayList<File>();
 
             checkConnection();
+
+            raspberryPi.stopCameraSG90Vertical();
+            raspberryPi.startHandDS3218();
             raspberryPi.setHandDS3218(valueOfDS3218);
+            try {
+                Thread.currentThread().sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            raspberryPi.stopHandDS3218();
+            raspberryPi.stopHandMG995();
+            raspberryPi.startCameraSG90Vertical();
+            raspberryPi.startCameraSG90Horizontal();
+            raspberryPi.setCameraSG90Vertical(53);
+            raspberryPi.setCameraSG90Horizontal(85);
+//            raspberryPi.setCameraSG90Horizontal(valueOfSG90);
             String string;
             while ((string=bufferedReader.readLine())!=null){
                 switch (string){
@@ -106,33 +121,73 @@ public class Communicate {
                         stopConnectAndroid();
                         break;
                     case RaspberryAction.SERVO_DS3218_CW:
+                        raspberryPi.stopCameraSG90Vertical();
+                        raspberryPi.startHandDS3218();
                         checkDS3218(RaspberryAction.SERVO_DS3218_CW);
                         break;
                     case RaspberryAction.SERVO_DS3218_CCW:
+                        raspberryPi.stopCameraSG90Vertical();
+                        raspberryPi.startHandDS3218();
                         checkDS3218(RaspberryAction.SERVO_DS3218_CCW);
                         break;
                     case RaspberryAction.SERVO_DS3218_STOP:
                         isDS3218Stop=true;
                         break;
                     case RaspberryAction.SERVO_MG995_HAND_CW:
+                        raspberryPi.stopCameraSG90Horizontal();
+                        raspberryPi.startHandMG995();
                         isHandMG995Stop=false;
                         raspberryPi.setHandMG995(46);
                         checkHandMg995IsOverTime();
                         break;
                     case RaspberryAction.SERVO_MG995_HAND_CCW:
+                        raspberryPi.stopCameraSG90Horizontal();
+                        raspberryPi.startHandMG995();
                         isHandMG995Stop=false;
                         raspberryPi.setHandMG995(94);
                         checkHandMg995IsOverTime();
                         break;
                     case RaspberryAction.SERVO_MG995_HAND_STOP:
+                        raspberryPi.stopCameraSG90Horizontal();
+                        raspberryPi.startHandMG995();
                         raspberryPi.handMG995Stop();
                         isHandMG995Stop=true;
                         break;
-                    case RaspberryAction.SERVO_MG995_CAMERA_CW:
+                    case RaspberryAction.SERVO_SG90_HORIZONTAL_CW:
+                        raspberryPi.stopHandMG995();
+                        raspberryPi.startCameraSG90Horizontal();
+                        if (valueOfSG90Horizontal>=40){
+                            valueOfSG90Horizontal-=1;
+                            raspberryPi.setCameraSG90Horizontal(valueOfSG90Horizontal);
+                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
+                        }
                         break;
-                    case RaspberryAction.SERVO_MG995_CAMERA_CCW:
+                    case RaspberryAction.SERVO_SG90_HORIZONTAL_CCW:
+                        raspberryPi.stopHandMG995();
+                        raspberryPi.startCameraSG90Horizontal();
+                        if (valueOfSG90Horizontal<=134){
+                            valueOfSG90Horizontal+=1;
+                            raspberryPi.setCameraSG90Horizontal(valueOfSG90Horizontal);
+                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
+                        }
                         break;
-                    case RaspberryAction.SERVO_MG995_CAMERA_STOP:
+                    case RaspberryAction.SERVO_SG90_VERTICAL_CW:
+                        raspberryPi.stopHandDS3218();
+                        raspberryPi.startCameraSG90Vertical();
+                        if (valueOfSG90Vertical>=53){
+                            valueOfSG90Vertical-=1;
+                            raspberryPi.setCameraSG90Vertical(valueOfSG90Vertical);
+                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
+                        }
+                        break;
+                    case RaspberryAction.SERVO_SG90_VERTICAL_CCW:
+                        raspberryPi.stopHandDS3218();
+                        raspberryPi.startCameraSG90Vertical();
+                        if (valueOfSG90Vertical<=80){
+                            valueOfSG90Vertical+=1;
+                            raspberryPi.setCameraSG90Vertical(valueOfSG90Vertical);
+                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
+                        }
                         break;
                     case RaspberryAction.TAKE_PICTURE:
                         //收到拍照指令
@@ -165,7 +220,20 @@ public class Communicate {
     private void stopCommunicate(){
         isStopCommunicate=true;
         //舵机归位
+        raspberryPi.stopCameraSG90Vertical();
+        raspberryPi.startHandDS3218();
         raspberryPi.setHandDS3218(23);
+        try {
+            Thread.currentThread().sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        raspberryPi.stopHandDS3218();
+        raspberryPi.stopHandMG995();
+        raspberryPi.startCameraSG90Vertical();
+        raspberryPi.startCameraSG90Horizontal();
+        raspberryPi.setCameraSG90Vertical(53);
+        raspberryPi.setCameraSG90Horizontal(85);
         raspberryPi.stop();
         System.out.println("Device "+devices+" offline!");
         stopConnectAndroid();

@@ -33,6 +33,14 @@ public class RaspberryAction {
     public static final String SERVO_MG995_CAMERA_CCW="mg995CamCCW";
     //SERVO_MG995_CAMERA停止
     public static final String SERVO_MG995_CAMERA_STOP="mg995CamStop";
+    //SERVO_SG90_CAMERA_HORIZONTAL顺时针
+    public static final String SERVO_SG90_HORIZONTAL_CW="sg90HorizontalCW";
+    //SERVO_SG90_CAMERA_HORIZONTAL逆时针
+    public static final String SERVO_SG90_HORIZONTAL_CCW="sg90HorizontalCCW";
+    //SERVO_SG90_CAMERA_VERTICAL顺时针
+    public static final String SERVO_SG90_VERTICAL_CW="sg90VerticalCW";
+    //SERVO_SG90_CAMERA_VERTICAL逆时针
+    public static final String SERVO_SG90_VERTICAL_CCW="sg90VerticalCCW";
     //发送照片之前发送确认指令
     public static final String SEND_PICTURE="sendPicture";
     //拍摄照片
