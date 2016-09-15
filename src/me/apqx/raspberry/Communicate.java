@@ -24,7 +24,7 @@ public class Communicate {
     private int valueOfDS3218=70;
     //SG90初始值85，使舵机处于中位
     private int valueOfSG90Horizontal=85;
-    private int valueOfSG90Vertical=85;
+    private int valueOfSG90Vertical=53;
     private Socket socket;
     private int devices;
     private RaspberryPi raspberryPi;
@@ -75,7 +75,6 @@ public class Communicate {
             raspberryPi.startCameraSG90Horizontal();
             raspberryPi.setCameraSG90Vertical(53);
             raspberryPi.setCameraSG90Horizontal(85);
-//            raspberryPi.setCameraSG90Horizontal(valueOfSG90);
             String string;
             while ((string=bufferedReader.readLine())!=null){
                 switch (string){
@@ -96,7 +95,6 @@ public class Communicate {
                         break;
                     case RaspberryAction.EXIT:
                         stopCommunicate();
-                        checkThread.interrupt();
                         return;
                     case RaspberryAction.SHUTDOWN:
                         stopCommunicate();
@@ -159,7 +157,7 @@ public class Communicate {
                         if (valueOfSG90Horizontal>=40){
                             valueOfSG90Horizontal-=1;
                             raspberryPi.setCameraSG90Horizontal(valueOfSG90Horizontal);
-                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
+//                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
                         }
                         break;
                     case RaspberryAction.SERVO_SG90_HORIZONTAL_CCW:
@@ -168,7 +166,7 @@ public class Communicate {
                         if (valueOfSG90Horizontal<=134){
                             valueOfSG90Horizontal+=1;
                             raspberryPi.setCameraSG90Horizontal(valueOfSG90Horizontal);
-                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
+//                            System.out.println("valueOfSG90="+valueOfSG90Horizontal);
                         }
                         break;
                     case RaspberryAction.SERVO_SG90_VERTICAL_CW:
@@ -177,7 +175,7 @@ public class Communicate {
                         if (valueOfSG90Vertical>=53){
                             valueOfSG90Vertical-=1;
                             raspberryPi.setCameraSG90Vertical(valueOfSG90Vertical);
-                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
+//                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
                         }
                         break;
                     case RaspberryAction.SERVO_SG90_VERTICAL_CCW:
@@ -186,7 +184,7 @@ public class Communicate {
                         if (valueOfSG90Vertical<=80){
                             valueOfSG90Vertical+=1;
                             raspberryPi.setCameraSG90Vertical(valueOfSG90Vertical);
-                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
+//                            System.out.println("valueOfSG90="+valueOfSG90Vertical);
                         }
                         break;
                     case RaspberryAction.TAKE_PICTURE:
@@ -251,6 +249,7 @@ public class Communicate {
         }catch (IOException e){
             e.printStackTrace();
         }
+
     }
     private void sendText(String string){
         printStream.println(string);
@@ -269,8 +268,10 @@ public class Communicate {
                         time=Calendar.getInstance().get(Calendar.SECOND);
                         while (!check){
                             if (isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
-                                stopCommunicate();
-                                currentThread.interrupt();
+                                if (!isStopCommunicate){
+                                    stopCommunicate();
+                                }
+//                                currentThread.interrupt();
                                 System.out.println("心跳检测成功");
                                 return;
                             }
@@ -283,7 +284,7 @@ public class Communicate {
                 }
 
             }
-        }).start();
+        },"Thread-checkConnect").start();
     }
     //判断时间是否大于指定的时间秒
     private boolean isOverTime(int time1,int time2,int time){
@@ -353,7 +354,7 @@ public class Communicate {
                     }
                 }
             }
-        },"checkHandMg995IsOverTime").start();
+        },"Thread-checkHandMg995IsOverTime").start();
     }
     //程序执行时检查图片文件夹内容，并将文件信息存入ArrayList中
     private void initArrayList(File file){

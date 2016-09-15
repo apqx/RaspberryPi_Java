@@ -162,7 +162,7 @@ public class RaspberryPi {
     //HAND_MG995
     public void setHandMG995(int pwm){
         HAND_MG995.setPwm(pwm);
-        System.out.println("setHandMG995="+pwm);
+//        System.out.println("setHandMG995="+pwm);
     }
     //HAND_DS3218
     public void setHandDS3218(int pwm){
@@ -251,6 +251,5 @@ public class RaspberryPi {
         com.pi4j.wiringpi.Gpio.pwmSetMode(com.pi4j.wiringpi.Gpio.PWM_MODE_MS);
         com.pi4j.wiringpi.Gpio.pwmSetRange(1000);
         com.pi4j.wiringpi.Gpio.pwmSetClock(400);
-
     }
 }
