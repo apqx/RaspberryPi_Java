@@ -53,6 +53,7 @@ public class Communicate {
         startCommunicate();
     }
     private void startCommunicate(){
+        isStopCommunicate=false;
         try {
             printStream=new PrintStream(socket.getOutputStream());
             bufferedReader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -64,17 +65,6 @@ public class Communicate {
             raspberryPi.stopCameraSG90Vertical();
             raspberryPi.startHandDS3218();
             raspberryPi.setHandDS3218(valueOfDS3218);
-            try {
-                Thread.currentThread().sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            raspberryPi.stopHandDS3218();
-            raspberryPi.stopHandMG995();
-            raspberryPi.startCameraSG90Vertical();
-            raspberryPi.startCameraSG90Horizontal();
-            raspberryPi.setCameraSG90Vertical(53);
-            raspberryPi.setCameraSG90Horizontal(85);
             String string;
             while ((string=bufferedReader.readLine())!=null){
                 switch (string){
@@ -207,6 +197,7 @@ public class Communicate {
                 }
             }
         }catch (IOException e){
+            System.out.println("startCommunicate failed");
             raspberryPi.stop();
             if (!isStopCommunicate){
                 stopCommunicate();
@@ -216,6 +207,7 @@ public class Communicate {
         }
     }
     private void stopCommunicate(){
+        System.out.println("stopCommunicate");
         isStopCommunicate=true;
         //舵机归位
         raspberryPi.stopCameraSG90Vertical();
