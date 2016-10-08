@@ -1,4 +1,4 @@
-package me.apqx.raspberry;
+package me.apqx.raspberry.server;
 
 import com.pi4j.io.gpio.*;
 

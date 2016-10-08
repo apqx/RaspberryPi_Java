@@ -1,4 +1,4 @@
-package me.apqx.raspberry;
+package me.apqx.raspberry.server;
 
 /**
  * Created by chang on 2016/6/30.

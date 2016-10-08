@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: me.apqx.raspberry.RaspberryPi
+Main-Class: me.apqx.raspberry.server.RaspberryPi
 
