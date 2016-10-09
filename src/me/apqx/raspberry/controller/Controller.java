@@ -60,9 +60,7 @@ public class Controller extends JFrame{
         handController=new ControllerPanel(screenValues.leftDirectionPanelX,screenValues.leftDirectionPanelY,screenValues.directionPanelLength,screenValues.directionPanelLength);
         moveController=new ControllerPanel(screenValues.rightDirectionPanelX,screenValues.rightDirectionPanelY,screenValues.directionPanelLength,screenValues.directionPanelLength);
         cameraController=new ControllerPanel(screenValues.cameraPanelX,screenValues.cameraPanelY,screenValues.cameraPanelLength,screenValues.cameraPanelLength);
-//        System.out.println(screenValues.btnConnectX+"   "+screenValues.btnConnectY);
-//        System.out.println(screenValues.btnShutdownX+"   "+screenValues.btnShutdownY);
-//        System.out.println(screenValues.btnDisconnectX+"   "+screenValues.btnDisconnectY);
+
 
         rightPanel=new JPanel();
         rightPanel.setLayout(null);
