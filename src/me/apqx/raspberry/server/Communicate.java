@@ -26,7 +26,6 @@ public class Communicate {
     private RaspberryPi raspberryPi;
     private PrintStream printStream;
     private BufferedReader bufferedReader;
-    private Thread currentThread;
     private Thread checkThread;
     private FileInputStream fileInputStream;
     private OutputStream outputStream;
@@ -45,7 +44,6 @@ public class Communicate {
         this.socket=socket;
         this.raspberryPi=raspberryPi;
         this.devices=devices;
-        currentThread=Thread.currentThread();
         startCommunicate();
     }
     private void startCommunicate(){
@@ -255,7 +253,7 @@ public class Communicate {
                         sendText(RaspberryAction.CHECK);
                         time=Calendar.getInstance().get(Calendar.SECOND);
                         while (!check){
-                            if (isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
+                            if (Util.isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
                                 if (!isStopCommunicate){
                                     stopCommunicate();
                                 }
@@ -274,22 +272,7 @@ public class Communicate {
             }
         },"Thread-checkConnect").start();
     }
-    //判断时间是否大于指定的时间秒
-    private boolean isOverTime(int time1,int time2,int time){
-        if (time2>=time1&&time2<60){
-            if ((time2-time1)<time){
-                return false;
-            }else {
-                return true;
-            }
-        }else {
-            if ((time2+60-time1)<time){
-                return false;
-            }else {
-                return true;
-            }
-        }
-    }
+
     //DS3218执行命令并判断是否停止
     private void checkDS3218(String order){
         if (order.equals(RaspberryAction.SERVO_DS3218_CCW)){
@@ -336,7 +319,7 @@ public class Communicate {
             public void run() {
                 int time=Calendar.getInstance().get(Calendar.SECOND);
                 while (!isHandMG995Stop){
-                    if (isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
+                    if (Util.isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
                         raspberryPi.handMG995Stop();
                         break;
                     }
@@ -408,7 +391,7 @@ public class Communicate {
                 break;
             }
 
-            if (isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
+            if (Util.isOverTime(time,Calendar.getInstance().get(Calendar.SECOND),2)){
 //                System.out.println("take picture overtime");
                 break;
             }

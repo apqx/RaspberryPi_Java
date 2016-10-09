@@ -33,6 +33,31 @@ public class ScreenValues {
     //摄像头控制面板位置
     public int cameraPanelX;
     public int cameraPanelY;
+    //集合控制面板的大小
+    public int rightPanelWidth;
+    public int rightPanelHeight;
+    //集合控制面板的位置
+    public int rightPanelX;
+    public int rightPanelY;
+    //连接、断开、关机按钮大小
+    public int btnWidth;
+    public int btnHeight;
+    //连接、断开、关机按钮位置
+    public int btnConnectX;
+    public int btnConnectY;
+    public int btnShutdownX;
+    public int btnShutdownY;
+    public int btnDisconnectX;
+    public int btnDisconnectY;
+    //连接状态指示器大小
+    public int imageStateWidth;
+    public int imageStateHeight;
+    //连接状态指示器位置
+    public int imageStateX;
+    public int imageStateY;
+    //状态颜色
+    public Color stateConnect;
+    public Color stateDisconnect;
     public ScreenValues(){
         Dimension dimension=Toolkit.getDefaultToolkit().getScreenSize();
         screenHeight=(int)dimension.getHeight();
@@ -41,13 +66,36 @@ public class ScreenValues {
         frameWidth=screenWidth*8/9;
         frameX=screenWidth/18;
         frameY=screenHeight/18;
-        directionPanelLength=frameWidth/5;
-        cameraPanelLength=frameWidth/5;
-        leftDirectionPanelX=frameWidth/10;
-        leftDirectionPanelY=frameHeight-directionPanelLength-frameHeight/10;
-        rightDirectionPanelX=frameWidth-directionPanelLength-frameWidth/10;
-        rightDirectionPanelY=frameHeight-directionPanelLength-frameHeight/10;
-        cameraPanelX=frameWidth/2-cameraPanelLength/2;
-        cameraPanelY=frameHeight-cameraPanelLength-frameHeight/10;
+        rightPanelWidth=frameWidth/3;
+        rightPanelHeight=frameHeight*14/15;
+        rightPanelX=frameWidth-rightPanelWidth-frameWidth/25;
+        rightPanelY=0;
+
+        directionPanelLength=rightPanelWidth/2;
+        leftDirectionPanelX=0;
+        leftDirectionPanelY=rightPanelHeight-directionPanelLength;
+        rightDirectionPanelX=directionPanelLength;
+        rightDirectionPanelY=rightPanelHeight-directionPanelLength;
+
+        cameraPanelLength=directionPanelLength;
+        cameraPanelX=rightPanelWidth/2-cameraPanelLength/2;
+        cameraPanelY=rightPanelHeight-cameraPanelLength-directionPanelLength;
+
+        imageStateWidth=rightPanelWidth;
+        imageStateHeight=directionPanelLength/3;
+        imageStateX=0;
+        imageStateY=cameraPanelY-imageStateHeight*5/3;
+
+        btnWidth=rightPanelWidth/3;
+        btnHeight=imageStateHeight;
+        btnConnectX=0;
+        btnConnectY=imageStateY-btnHeight*5/4;
+        btnShutdownX=btnWidth;
+        btnShutdownY=btnConnectY;
+        btnDisconnectX=btnWidth*2;
+        btnDisconnectY=btnConnectY;
+
+        stateConnect=Color.green;
+        stateDisconnect=Color.RED;
     }
 }
