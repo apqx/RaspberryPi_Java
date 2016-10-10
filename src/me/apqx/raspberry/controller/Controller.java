@@ -5,7 +5,6 @@ import me.apqx.raspberry.controller.listener.DirectionListener;
 import me.apqx.raspberry.server.RaspberryAction;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -38,6 +37,15 @@ public class Controller extends JFrame{
     private boolean downIsOn;
     private boolean rightIsOn;
     private boolean leftIsOn;
+    //当按下键时会持续发送命令，需要判断键是否已经按下
+    private boolean wIsOn;
+    private boolean aIsOn;
+    private boolean sIsOn;
+    private boolean dIsOn;
+    private boolean iIsOn;
+    private boolean kIsOn;
+    private boolean jIsOn;
+    private boolean lIsOn;
 
     private Controller(String title){
         super(title);
@@ -90,56 +98,88 @@ public class Controller extends JFrame{
 //                System.out.println(e.getKeyChar()+" Pressed");
                 switch (e.getKeyCode()){
                     case KeyEvent.VK_UP:
-                        //前进
-                        communicate.sendText(RaspberryAction.FORWARD);
-                        upIsOn=true;
+                        //前
+                        if (!upIsOn){
+                            communicate.sendText(RaspberryAction.FORWARD);
+                            upIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_DOWN:
                         //后退
-                        communicate.sendText(RaspberryAction.BACK);
-                        downIsOn=true;
+                        if (!downIsOn){
+                            communicate.sendText(RaspberryAction.BACK);
+                            downIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_RIGHT:
                         //右转
-                        communicate.sendText(RaspberryAction.TURN_RIGHT);
-                        rightIsOn=true;
+                        if (!rightIsOn){
+                            communicate.sendText(RaspberryAction.TURN_RIGHT);
+                            rightIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_LEFT:
                         //左转
-                        communicate.sendText(RaspberryAction.TURN_LEFT);
-                        leftIsOn=true;
+                        if (!leftIsOn){
+                            communicate.sendText(RaspberryAction.TURN_LEFT);
+                            leftIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_W:
                         //机械臂抬起
-                        communicate.sendText(RaspberryAction.SERVO_DS3218_CW);
+                        if (!wIsOn){
+                            communicate.sendText(RaspberryAction.SERVO_DS3218_CW);
+                            wIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_S:
                         //机械臂放下
-                        communicate.sendText(RaspberryAction.SERVO_DS3218_CCW);
+                        if (!sIsOn){
+                            communicate.sendText(RaspberryAction.SERVO_DS3218_CCW);
+                            sIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_A:
                         //机械臂松开
-                        communicate.sendText(RaspberryAction.SERVO_MG995_HAND_CW);
+                        if (!aIsOn){
+                            communicate.sendText(RaspberryAction.SERVO_MG995_HAND_CW);
+                            aIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_D:
                         //机械臂夹紧
-                        communicate.sendText(RaspberryAction.SERVO_MG995_HAND_CCW);
+                        if (!dIsOn){
+                            communicate.sendText(RaspberryAction.SERVO_MG995_HAND_CCW);
+                            dIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_I:
                         //摄像头向上
-                        sendCameraText(RaspberryAction.SERVO_SG90_VERTICAL_CCW);
+                        if (!iIsOn){
+                            sendCameraText(RaspberryAction.SERVO_SG90_VERTICAL_CCW);
+                            iIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_K:
                         //摄像头向下
-                        sendCameraText(RaspberryAction.SERVO_SG90_VERTICAL_CW);
+                        if (!kIsOn){
+                            sendCameraText(RaspberryAction.SERVO_SG90_VERTICAL_CW);
+                            kIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_J:
                         //摄像头向左
-                        sendCameraText(RaspberryAction.SERVO_SG90_HORIZONTAL_CCW);
+                        if (!jIsOn){
+                            sendCameraText(RaspberryAction.SERVO_SG90_HORIZONTAL_CCW);
+                            jIsOn=true;
+                        }
                         break;
                     case KeyEvent.VK_L:
                         //摄像头向右
-                        sendCameraText(RaspberryAction.SERVO_SG90_HORIZONTAL_CW);
+                        if (!lIsOn){
+                            sendCameraText(RaspberryAction.SERVO_SG90_HORIZONTAL_CW);
+                            lIsOn=true;
+                        }
                         break;
                     default:break;
                 }
@@ -175,24 +215,42 @@ public class Controller extends JFrame{
                         break;
                     case KeyEvent.VK_W:
                         //机械臂抬起
+                        communicate.sendText(RaspberryAction.SERVO_DS3218_STOP);
+                        wIsOn=false;
+                        break;
                     case KeyEvent.VK_S:
                         //机械臂放下
+                        sIsOn=false;
                         communicate.sendText(RaspberryAction.SERVO_DS3218_STOP);
                         break;
                     case KeyEvent.VK_A:
                         //机械臂松开
+                        communicate.sendText(RaspberryAction.SERVO_MG995_HAND_STOP);
+                        aIsOn=false;
+                        break;
                     case KeyEvent.VK_D:
                         //机械臂夹紧
                         communicate.sendText(RaspberryAction.SERVO_MG995_HAND_STOP);
+                        dIsOn=false;
                         break;
                     case KeyEvent.VK_I:
                         //摄像头向上
+                        iIsOn=false;
+                        isStop=true;
+                        break;
                     case KeyEvent.VK_K:
                         //摄像头向下
+                        kIsOn=false;
+                        isStop=true;
+                        break;
                     case KeyEvent.VK_J:
+                        jIsOn=false;
+                        isStop=true;
+                        break;
                         //摄像头向左
                     case KeyEvent.VK_L:
                         //摄像头向右
+                        lIsOn=false;
                         isStop=true;
                         break;
                     default:break;
