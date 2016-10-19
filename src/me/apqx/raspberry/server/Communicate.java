@@ -56,9 +56,6 @@ public class Communicate {
 
             checkConnection();
 
-            raspberryPi.stopCameraSG90Vertical();
-            raspberryPi.startHandDS3218();
-            raspberryPi.setHandDS3218(valueOfDS3218);
             String string;
             while ((string=bufferedReader.readLine())!=null){
                 switch (string){
@@ -203,6 +200,7 @@ public class Communicate {
     private void stopCommunicate(){
         System.out.println("stopCommunicate");
         isStopCommunicate=true;
+        raspberryPi.stop();
         //舵机归位
         raspberryPi.stopCameraSG90Vertical();
         raspberryPi.startHandDS3218();
@@ -218,7 +216,7 @@ public class Communicate {
         raspberryPi.startCameraSG90Horizontal();
         raspberryPi.setCameraSG90Vertical(53);
         raspberryPi.setCameraSG90Horizontal(85);
-        raspberryPi.stop();
+
         System.out.println("Device "+devices+" offline!");
         stopConnectAndroid();
         try {
@@ -246,6 +244,21 @@ public class Communicate {
             private int time;
             @Override
             public void run() {
+                //舵机初始化位置
+                raspberryPi.stopCameraSG90Vertical();
+                raspberryPi.startHandDS3218();
+                raspberryPi.setHandDS3218(valueOfDS3218);
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                raspberryPi.stopHandDS3218();
+                raspberryPi.stopHandMG995();
+                raspberryPi.startCameraSG90Vertical();
+                raspberryPi.startCameraSG90Horizontal();
+                raspberryPi.setCameraSG90Vertical(53);
+                raspberryPi.setCameraSG90Horizontal(85);
                 try {
                     checkThread=Thread.currentThread();
                     while (true){

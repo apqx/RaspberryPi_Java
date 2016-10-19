@@ -38,11 +38,12 @@ public class RaspberryPi {
     private GpioPinPwmOutput CAMERA_SG90_VERTICAL=gpio.provisionPwmOutputPin(RaspiPin.GPIO_01);
 
     public static void main(String[] args) {
-
-
-
         raspberryPi=new RaspberryPi();
         raspberryPi.initServo();
+        raspberryPi.stopHandMG995();
+        raspberryPi.stopHandDS3218();
+        raspberryPi.stopCameraSG90Horizontal();
+        raspberryPi.stopCameraSG90Vertical();
         checkInput();
         start();
     }
@@ -82,6 +83,23 @@ public class RaspberryPi {
                 Scanner scanner=new Scanner(System.in);
                 while (scanner.hasNextLine()){
                     if (scanner.nextLine().equals("exit")){
+                        //在这里关闭各种设备
+                        raspberryPi.stop();
+                        //舵机归位
+                        raspberryPi.stopCameraSG90Vertical();
+                        raspberryPi.startHandDS3218();
+                        raspberryPi.setHandDS3218(23);
+                        try {
+                            Thread.currentThread().sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        raspberryPi.stopHandDS3218();
+                        raspberryPi.stopHandMG995();
+                        raspberryPi.startCameraSG90Vertical();
+                        raspberryPi.startCameraSG90Horizontal();
+                        raspberryPi.setCameraSG90Vertical(53);
+                        raspberryPi.setCameraSG90Horizontal(85);
                         gpio.shutdown();
                         System.exit(0);
                     }
