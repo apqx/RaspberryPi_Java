@@ -435,7 +435,7 @@ public class Communicate {
                     Runtime.getRuntime().exec("sudo killall mjpg_streamer");
                     //延时1秒再启动相机拍照
                     Thread.currentThread().sleep(1000);
-                    Runtime.getRuntime().exec("raspistill -rot 180 -o /home/pi/RaspberryPi/Picture/picture-"+numOfPicture+".jpg");
+                    Runtime.getRuntime().exec("raspistill -rot 180 -o /home/pi/RaspberryPi/Picture/"+Util.getPictureName());
                     sendText(RaspberryAction.TAKE_PICTURE);
                     numOfPicture++;
                     //摄像头默认拍照时间为5秒，故延时5秒
