@@ -24,10 +24,10 @@ public class RaspberryPi {
     private GpioPinDigitalOutput RIGHT_1=gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00,"right_1", PinState.LOW);
     //L298n in2
     private GpioPinDigitalOutput RIGHT_2=gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02,"right_2",PinState.LOW);
-    //L298n in4
-    private GpioPinDigitalOutput LEFT_1=gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04,"left_1",PinState.LOW);
     //L298n in3
     private GpioPinDigitalOutput LEFT_2=gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03,"left_2",PinState.LOW);
+    //L298n in4
+    private GpioPinDigitalOutput LEFT_1=gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04,"left_1",PinState.LOW);
     //DS3218_HAND
     private GpioPinPwmOutput HAND_DS3218=gpio.provisionPwmOutputPin(RaspiPin.GPIO_26);
     //MG995_HAND

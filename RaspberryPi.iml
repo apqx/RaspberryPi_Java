@@ -7,6 +7,18 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="pi4j-1.1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://E:/RaspberryPi/pi4j-1.1/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://E:/RaspberryPi/pi4j-1.1/lib" />
+        </SOURCES>
+        <jarDirectory url="file://E:/RaspberryPi/pi4j-1.1/lib" recursive="false" />
+        <jarDirectory url="file://E:/RaspberryPi/pi4j-1.1/lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>
